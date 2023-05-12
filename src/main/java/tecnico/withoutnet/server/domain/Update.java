@@ -2,9 +2,7 @@ package tecnico.withoutnet.server.domain;
 
 public class Update {
     private long timestamp;
-
     private Node sender;
-
     private String reading;
 
     public Update(long timestamp, Node sender, String reading) {
