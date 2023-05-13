@@ -2,9 +2,14 @@ package tecnico.withoutnet.server.domain;
 
 import org.springframework.lang.Nullable;
 
+import javax.persistence.Id;
+
 public class Node {
+    @Id
     private String id;
+
     private String commonName;
+    
     private String readingType;
 
     public Node(String id, String commonName, String readingType) {

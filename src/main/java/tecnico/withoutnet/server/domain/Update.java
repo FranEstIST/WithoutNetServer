@@ -1,8 +1,14 @@
 package tecnico.withoutnet.server.domain;
 
+import javax.persistence.Id;
+
 public class Update {
+    @Id
     private long timestamp;
+
+    @Id
     private Node sender;
+
     private String reading;
 
     public Update(long timestamp, Node sender, String reading) {
