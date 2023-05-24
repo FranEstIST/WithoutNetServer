@@ -6,5 +6,5 @@ import tecnico.withoutnet.server.domain.Node;
 
 @Repository
 public interface NodeRepo extends JpaRepository<Node, Long> {
-    Node findById(String id);
+    Node findByUuid(String uuid);
 }

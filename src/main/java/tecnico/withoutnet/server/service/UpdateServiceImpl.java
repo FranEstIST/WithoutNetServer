@@ -22,12 +22,12 @@ public class UpdateServiceImpl implements UpdateService {
 
     @Override
     public List<Update> getUpdatesByNode(Node node) {
-        return updateRepo.findByNode(node);
+        return updateRepo.findBySender(node);
     }
 
     @Override
     public Update getMostRecentUpdateByNode(Node node) {
-        List<Update> updates = updateRepo.findByNode(node);
+        List<Update> updates = updateRepo.findBySender(node);
 
         if(updates == null) {
             return null;

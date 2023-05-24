@@ -2,18 +2,24 @@ package tecnico.withoutnet.server.domain;
 
 import org.springframework.lang.Nullable;
 
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 
-public class Node {
+@Entity
+@Table(name = "nodes")
+public class Node implements Serializable {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private String uuid;
 
     private String commonName;
     
     private String readingType;
 
     public Node(String id, String commonName, String readingType) {
-        this.setId(id);
+        this.setUuid(id);
         this.setCommonName(commonName);
         this.readingType = readingType;
     }
@@ -26,7 +32,7 @@ public class Node {
             return;
         }
 
-        this.setId(relevantNodeValueComponents[0]);
+        this.setUuid(relevantNodeValueComponents[0]);
         this.setCommonName(relevantNodeValueComponents[1]);
         this.setReadingType(relevantNodeValueComponents[2]);
     }
@@ -43,15 +49,15 @@ public class Node {
         }
     }
 
-    public String getId() {
-        return this.id;
+    public String getUuid() {
+        return this.uuid;
     }
 
-    public void setId(String id) {
-        if(id == null) {
-            this.id = "N/A";
+    public void setUuid(String uuid) {
+        if(uuid == null) {
+            this.uuid = "N/A";
         } else {
-            this.id = id;
+            this.uuid = uuid;
         }
     }
 
@@ -65,14 +71,14 @@ public class Node {
 
     @Override
     public String toString() {
-        return "" + this.getId() + "#" + this.getCommonName() + "#" + this.getReadingType();
+        return "" + this.getUuid() + "#" + this.getCommonName() + "#" + this.getReadingType();
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
         if(obj != null && obj instanceof Node) {
             Node node = (Node) obj;
-            return node.getId().equals(this.getId())
+            return node.getUuid().equals(this.getUuid())
                     && node.getCommonName().equals(this.getCommonName())
                     && node.getReadingType().equals(this.getReadingType());
         }
@@ -82,6 +88,6 @@ public class Node {
 
     @Override
     public int hashCode() {
-        return (this.getId()+this.getCommonName()+this.getReadingType()).hashCode();
+        return (this.getUuid()+this.getCommonName()+this.getReadingType()).hashCode();
     }
 }

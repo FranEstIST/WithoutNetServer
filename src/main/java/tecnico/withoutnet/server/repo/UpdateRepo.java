@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface UpdateRepo extends JpaRepository<Update, Long> {
-    List<Update> findByNode(Node node);
+    List<Update> findBySender(Node node);
 }

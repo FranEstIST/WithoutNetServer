@@ -1,12 +1,18 @@
 package tecnico.withoutnet.server.domain;
 
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 
-public class Update {
+@Entity
+@Table(name = "updates")
+public class Update implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     private long timestamp;
 
-    @Id
+    @ManyToOne
     private Node sender;
 
     private String reading;
