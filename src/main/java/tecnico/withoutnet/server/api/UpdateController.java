@@ -66,6 +66,10 @@ public class UpdateController {
     }
 }
 
+/*class MarshalledUpdate {
+
+}*/
+
 /*class AddUpdateRequest {
     private final String timestamp;
     private final
