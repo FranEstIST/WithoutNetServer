@@ -17,6 +17,9 @@ public class Update implements Serializable {
 
     private String reading;
 
+    public Update() {
+    }
+
     public Update(long timestamp, Node sender, String reading) {
         this.timestamp = timestamp;
         this.sender = sender;

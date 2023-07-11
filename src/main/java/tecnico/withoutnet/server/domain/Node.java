@@ -18,6 +18,9 @@ public class Node implements Serializable {
     
     private String readingType;
 
+    public Node() {
+    }
+
     public Node(String id, String commonName, String readingType) {
         this.setUuid(id);
         this.setCommonName(commonName);

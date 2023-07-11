@@ -11,6 +11,8 @@ public class Message {
 
     private long localId;
 
+    private int messageType;
+
     private long timestamp;
 
     private String sender;
@@ -19,8 +21,12 @@ public class Message {
 
     private String content;
 
-    public Message(long localId, long timestamp, String sender, String receiver, String content) {
+    public Message() {
+    }
+
+    public Message(long localId, int messageType, long timestamp, String sender, String receiver, String content) {
         this.localId = localId;
+        this.messageType = messageType;
         this.timestamp = timestamp;
         this.sender = sender;
         this.receiver = receiver;
@@ -56,6 +62,10 @@ public class Message {
         return localId;
     }
 
+    public int getMessageType() {
+        return messageType;
+    }
+
     public long getTimestamp() {
         return timestamp;
     }
@@ -78,6 +88,10 @@ public class Message {
 
     public void setLocalId(long localId) {
         this.localId = localId;
+    }
+
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
     }
 
     public void setTimestamp(long timestamp) {
