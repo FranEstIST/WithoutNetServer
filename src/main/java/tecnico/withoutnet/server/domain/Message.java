@@ -3,7 +3,8 @@ package tecnico.withoutnet.server.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "messages",
+       uniqueConstraints = {@UniqueConstraint(columnNames = {"localId", "messageType", "timestamp", "sender", "receiver", "content"})})
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
