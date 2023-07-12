@@ -16,7 +16,14 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void addMessage(Message message) {
-        messageRepo.save(message);
+        try {
+            messageRepo.save(message);
+        } catch(org.hibernate.exception.ConstraintViolationException e) {
+            // TODO: This exception is thrown when a duplicate update is sent to the server (not
+            // necessarily an error), so it should be handled in a way that doesn't interfere
+            // with the program's execution
+        }
+
     }
 
     @Override
