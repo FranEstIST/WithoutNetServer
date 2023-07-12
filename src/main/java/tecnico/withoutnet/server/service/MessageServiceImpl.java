@@ -16,6 +16,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void addMessage(Message message) {
+        if(messageRepo.existsByLocalIdAndMessageTypeAndTimestampAndSenderAndReceiverAndContent(message.getLocalId(),
+                message.getMessageType(), message.getTimestamp(), message.getSender(), message.getReceiver(), message.getContent())) {
+            return;
+        }
+
         try {
             messageRepo.save(message);
         } catch(org.hibernate.exception.ConstraintViolationException e) {
