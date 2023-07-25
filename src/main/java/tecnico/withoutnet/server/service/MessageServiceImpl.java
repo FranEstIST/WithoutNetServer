@@ -16,8 +16,12 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void addMessage(Message message) {
-        if(messageRepo.existsByLocalIdAndMessageTypeAndTimestampAndSenderAndReceiverAndContent(message.getLocalId(),
-                message.getMessageType(), message.getTimestamp(), message.getSender(), message.getReceiver(), message.getContent())) {
+        if(messageRepo.existsByTimestampAndMessageTypeAndSenderAndReceiverAndPayload(
+                message.getTimestamp(),
+                message.getMessageType(),
+                message.getSender(),
+                message.getReceiver(),
+                message.getPayload())) {
             return;
         }
 
@@ -32,7 +36,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getMessageByReceiver(String receiver) {
+    public List<Message> getMessageByReceiver(int receiver) {
         return messageRepo.findByReceiver(receiver);
     }
 

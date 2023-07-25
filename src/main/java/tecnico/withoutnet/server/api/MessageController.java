@@ -23,14 +23,14 @@ public class MessageController {
 
     @PostMapping("add-message")
     public String addMessage(@RequestBody AddMessageRequest addMessageRequest) {
-        long localId = addMessageRequest.getLocalId();
-        int messageType = addMessageRequest.getMessageType();
+        int length = addMessageRequest.getLength();
         long timestamp = addMessageRequest.getTimestamp();
-        String sender = addMessageRequest.getSender();
-        String receiver = addMessageRequest.getReceiver();
-        String content = addMessageRequest.getContent();
+        int messageType = addMessageRequest.getMessageType();
+        int sender = addMessageRequest.getSender();
+        int receiver = addMessageRequest.getReceiver();
+        String payload = addMessageRequest.getPayload();
 
-        Message receivedMessage = new Message(localId, messageType, timestamp, sender, receiver, content);
+        Message receivedMessage = new Message((short) length, timestamp, messageType, sender, receiver, payload);
 
         messageService.addMessage(receivedMessage);
         JsonObject response = createStatusJson(StatusCodes.OK);
@@ -38,7 +38,7 @@ public class MessageController {
     }
 
     @PostMapping("get-messages-by-receiver/{receiver}")
-    public String getMostRecentMessageByReceiver(@PathVariable String receiver) {
+    public String getMostRecentMessageByReceiver(@PathVariable int receiver) {
         /*if(receiver not valid) {
             JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
             return response.toString();
@@ -93,12 +93,11 @@ public class MessageController {
 
     private JsonObject getMessageJson(Message message) {
         JsonObject messageJson = JsonParser.parseString("{}").getAsJsonObject();
-        messageJson.addProperty("id", message.getLocalId());
         messageJson.addProperty("messageType", message.getMessageType());
         messageJson.addProperty("timestamp", message.getTimestamp());
         messageJson.addProperty("sender", message.getSender());
         messageJson.addProperty("receiver", message.getReceiver());
-        messageJson.addProperty("content", message.getContent());
+        messageJson.addProperty("payload", message.getPayload());
         return messageJson;
     }
 
@@ -112,43 +111,43 @@ public class MessageController {
 }
 
 class AddMessageRequest {
-    private final long localId;
-    private final int messageType;
+    private final int length;
     private final long timestamp;
-    private final String sender;
-    private final String receiver;
-    private final String content;
+    private final int messageType;
+    private final int sender;
+    private final int receiver;
+    private final String payload;
 
-    public AddMessageRequest(long localId, int messageType, long timestamp, String sender, String receiver, String content) {
-        this.localId = localId;
-        this.messageType = messageType;
+    public AddMessageRequest(int length, long timestamp, int messageType, int sender, int receiver, String payload) {
+        this.length = length;
         this.timestamp = timestamp;
+        this.messageType = messageType;
         this.sender = sender;
         this.receiver = receiver;
-        this.content = content;
+        this.payload = payload;
     }
 
-    public long getLocalId() {
-        return localId;
-    }
-
-    public int getMessageType() {
-        return messageType;
+    public int getLength() {
+        return length;
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public String getSender() {
+    public int getMessageType() {
+        return messageType;
+    }
+
+    public int getSender() {
         return sender;
     }
 
-    public String getReceiver() {
+    public int getReceiver() {
         return receiver;
     }
 
-    public String getContent() {
-        return content;
+    public String getPayload() {
+        return payload;
     }
 }

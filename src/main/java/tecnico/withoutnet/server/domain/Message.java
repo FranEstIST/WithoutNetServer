@@ -1,40 +1,41 @@
 package tecnico.withoutnet.server.domain;
 
 import javax.persistence.*;
+import java.util.Base64;
 
 @Entity
 @Table(name = "messages",
-       uniqueConstraints = {@UniqueConstraint(columnNames = {"localId", "messageType", "timestamp", "sender", "receiver", "content"})})
+       uniqueConstraints = {@UniqueConstraint(columnNames = {"timestamp", "messageType", "sender", "receiver", "payload"})})
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long localId;
-
-    private int messageType;
+    private short length;
 
     private long timestamp;
 
-    private String sender;
+    private int messageType;
 
-    private String receiver;
+    private int sender;
 
-    private String content;
+    private int receiver;
+
+    private String payload;
 
     public Message() {
     }
 
-    public Message(long localId, int messageType, long timestamp, String sender, String receiver, String content) {
-        this.localId = localId;
-        this.messageType = messageType;
+    public Message(short length, long timestamp, int messageType, int sender, int receiver, String payload) {
+        this.length = length;
         this.timestamp = timestamp;
+        this.messageType = messageType;
         this.sender = sender;
         this.receiver = receiver;
-        this.content = content;
+        this.payload = payload;
     }
 
-    public Message(String messageString) {
+    /*public Message(String messageString) {
         String messageStringComponents[] = messageString.split("#");
 
         if(messageStringComponents.length != 5) {
@@ -42,25 +43,19 @@ public class Message {
         }
 
         try {
-            this.localId = Long.valueOf(messageStringComponents[0]);
+            this.length = Short.valueOf(messageStringComponents[0]);
             this.timestamp = Long.valueOf(messageStringComponents[1]);
+            this.sender = Integer.valueOf(messageStringComponents[2]);
+            this.receiver = Integer.valueOf(messageStringComponents[3]);
         } catch (NumberFormatException e) {
             //TODO: Throw an exception here
         }
 
-        this.sender = messageStringComponents[2];
-
-        this.receiver = messageStringComponents[3];
-
-        this.content = messageStringComponents[4];
-    }
+        this.payload = messageStringComponents[4];
+    }*/
 
     public long getId() {
         return id;
-    }
-
-    public long getLocalId() {
-        return localId;
     }
 
     public int getMessageType() {
@@ -71,24 +66,24 @@ public class Message {
         return timestamp;
     }
 
-    public String getSender() {
+    public int getSender() {
         return sender;
     }
 
-    public String getReceiver() {
+    public int getReceiver() {
         return receiver;
     }
 
-    public String getContent() {
-        return content;
+    public String getPayload() {
+        return payload;
     }
+
+    /*public String getPayloadAsString() {
+        return Base64.getEncoder().encodeToString(payload);
+    }*/
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setLocalId(long localId) {
-        this.localId = localId;
     }
 
     public void setMessageType(int messageType) {
@@ -99,15 +94,15 @@ public class Message {
         this.timestamp = timestamp;
     }
 
-    public void setSender(String sender) {
+    public void setSender(int sender) {
         this.sender = sender;
     }
 
-    public void setReceiver(String receiver) {
+    public void setReceiver(int receiver) {
         this.receiver = receiver;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setPayload(String payload) {
+        this.payload = payload;
     }
 }
