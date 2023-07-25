@@ -58,6 +58,10 @@ public class Message {
         return id;
     }
 
+    public short getLength() {
+        return length;
+    }
+
     public int getMessageType() {
         return messageType;
     }
@@ -84,6 +88,10 @@ public class Message {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void setLength(short length) {
+        this.length = length;
     }
 
     public void setMessageType(int messageType) {

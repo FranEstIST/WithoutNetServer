@@ -93,8 +93,9 @@ public class MessageController {
 
     private JsonObject getMessageJson(Message message) {
         JsonObject messageJson = JsonParser.parseString("{}").getAsJsonObject();
-        messageJson.addProperty("messageType", message.getMessageType());
+        messageJson.addProperty("length", message.getLength());
         messageJson.addProperty("timestamp", message.getTimestamp());
+        messageJson.addProperty("messageType", message.getMessageType());
         messageJson.addProperty("sender", message.getSender());
         messageJson.addProperty("receiver", message.getReceiver());
         messageJson.addProperty("payload", message.getPayload());
