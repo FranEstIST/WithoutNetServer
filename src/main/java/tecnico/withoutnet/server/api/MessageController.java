@@ -21,6 +21,27 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    @PostMapping("add-message-batch")
+    public String addMessageBatch(@RequestBody AddMessageBatchRequest addMessageBatchRequest) {
+        List<AddMessageRequest> messageBatch = addMessageBatchRequest.getMessageBatch();
+
+        for(AddMessageRequest addMessageRequest : messageBatch) {
+            int length = addMessageRequest.getLength();
+            long timestamp = addMessageRequest.getTimestamp();
+            int messageType = addMessageRequest.getMessageType();
+            int sender = addMessageRequest.getSender();
+            int receiver = addMessageRequest.getReceiver();
+            String payload = addMessageRequest.getPayload();
+
+            Message receivedMessage = new Message((short) length, timestamp, messageType, sender, receiver, payload);
+
+            messageService.addMessage(receivedMessage);
+        }
+
+        JsonObject response = createStatusJson(StatusCodes.OK);
+        return response.toString();
+    }
+
     @PostMapping("add-message")
     public String addMessage(@RequestBody AddMessageRequest addMessageRequest) {
         int length = addMessageRequest.getLength();
@@ -33,6 +54,7 @@ public class MessageController {
         Message receivedMessage = new Message((short) length, timestamp, messageType, sender, receiver, payload);
 
         messageService.addMessage(receivedMessage);
+
         JsonObject response = createStatusJson(StatusCodes.OK);
         return response.toString();
     }
@@ -108,6 +130,18 @@ public class MessageController {
         nodeJson.addProperty("common-name", node.getCommonName());
         nodeJson.addProperty("reading-type", node.getReadingType());
         return nodeJson;
+    }
+}
+
+class AddMessageBatchRequest {
+    private final List<AddMessageRequest> messageBatch;
+
+    public AddMessageBatchRequest(List<AddMessageRequest> messageBatch) {
+        this.messageBatch = messageBatch;
+    }
+
+    public List<AddMessageRequest> getMessageBatch() {
+        return messageBatch;
     }
 }
 
