@@ -8,4 +8,5 @@ public interface MessageService {
     void addMessage(Message message);
     List<Message> getMessageByReceiver(int receiver);
     List<Message> getAllMessages();
+    void deleteAllMessages();
 }

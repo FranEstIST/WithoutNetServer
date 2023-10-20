@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>WithoutNet Portal</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!--<meta http-equiv="Refresh" content="7; url='https://www.w3docs.com'" />-->
+    <link rel="stylesheet" th:href="@{/styles/cssandjs/WithoutNetPortal.css}">
+</head>
+
+<body>
+<canvas id="logoCanvas" width="250" height="50">
+</canvas>
+
+<script>
+        const canvas = document.getElementById("logoCanvas");
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#03b1fc";
+        ctx.fillRect(0, 0, 250, 50);
+
+        ctx.fillStyle = "white";
+        ctx.font = "30px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("WithoutNet Portal", 125, 35);
+
+        function deleteAllMesssages() {
+            window.location = window.location + "/delete-all"
+        }
+    </script>
+
+<div></div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Timestamp</th>
+        <th>Message Type</th>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Payload</th>
+        <th><button type="button" class="deleteButton" onclick="deleteAllMesssages()">Delete all</button></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${messages.empty}">
+        <td colspan="5"> No Messages Available </td>
+    </tr>
+    <tr th:each="message : ${messages}">
+        <td><span th:text="${message.timestamp}"> Timestamp </span></td>
+        <td><span th:text="${message.messageType}"> Message Type </span></td>
+        <td><span th:text="${message.sender}"> Sender </span></td>
+        <td><span th:text="${message.receiver}"> Receiver </span></td>
+        <td><span th:text="${message.payload}"> Payload </span></td>
+        <td><button type="button" class="deleteButton">X</button></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+
+</html>

@@ -44,4 +44,9 @@ public class MessageServiceImpl implements MessageService {
     public List<Message> getAllMessages() {
         return messageRepo.findAll();
     }
+
+    @Override
+    public void deleteAllMessages() {
+        messageRepo.deleteAll();
+    }
 }
