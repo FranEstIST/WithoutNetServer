@@ -10,34 +10,15 @@ import java.io.Serializable;
 public class Node implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    private String uuid;
+    private int id;
 
     private String commonName;
-    
-    private String readingType;
 
     public Node() {
     }
 
-    public Node(String id, String commonName, String readingType) {
-        this.setUuid(id);
+    public Node(String commonName) {
         this.setCommonName(commonName);
-        this.readingType = readingType;
-    }
-
-    public Node(String relevantNodeValue) {
-        String[] relevantNodeValueComponents = relevantNodeValue.split("#");
-
-        if(relevantNodeValueComponents.length != 3) {
-            // TODO: Throw an exception
-            return;
-        }
-
-        this.setUuid(relevantNodeValueComponents[0]);
-        this.setCommonName(relevantNodeValueComponents[1]);
-        this.setReadingType(relevantNodeValueComponents[2]);
     }
 
     public String getCommonName() {
@@ -52,38 +33,20 @@ public class Node implements Serializable {
         }
     }
 
-    public String getUuid() {
-        return this.uuid;
-    }
-
-    public void setUuid(String uuid) {
-        if(uuid == null) {
-            this.uuid = "N/A";
-        } else {
-            this.uuid = uuid;
-        }
-    }
-
-    public String getReadingType() {
-        return this.readingType;
-    }
-
-    public void setReadingType(String readingType) {
-        this.readingType = readingType;
+    public int getId() {
+        return this.id;
     }
 
     @Override
     public String toString() {
-        return "" + this.getUuid() + "#" + this.getCommonName() + "#" + this.getReadingType();
+        return "" + this.getCommonName() + "#" + this.getId();
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
         if(obj != null && obj instanceof Node) {
             Node node = (Node) obj;
-            return node.getUuid().equals(this.getUuid())
-                    && node.getCommonName().equals(this.getCommonName())
-                    && node.getReadingType().equals(this.getReadingType());
+            return node.getId() == this.getId();
         }
 
         return false;
@@ -91,6 +54,6 @@ public class Node implements Serializable {
 
     @Override
     public int hashCode() {
-        return (this.getUuid()+this.getCommonName()+this.getReadingType()).hashCode();
+        return (this.getId()+this.getCommonName()).hashCode();
     }
 }

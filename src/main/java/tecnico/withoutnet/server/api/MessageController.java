@@ -126,9 +126,9 @@ public class MessageController {
 
     private JsonObject getNodeJson(Node node) {
         JsonObject nodeJson = JsonParser.parseString("{}").getAsJsonObject();
-        nodeJson.addProperty("id", node.getUuid());
+        nodeJson.addProperty("id", node.getId());
         nodeJson.addProperty("common-name", node.getCommonName());
-        nodeJson.addProperty("reading-type", node.getReadingType());
+        //nodeJson.addProperty("reading-type", node.getReadingType());
         return nodeJson;
     }
 }
