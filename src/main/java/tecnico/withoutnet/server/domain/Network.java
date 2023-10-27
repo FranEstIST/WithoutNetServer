@@ -2,6 +2,7 @@ package tecnico.withoutnet.server.domain;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "networks")
@@ -9,9 +10,13 @@ public class Network {
     @Id
     private String name;
 
-    @OneToMany(mappedBy = "network")
-    @JoinColumn(name="id")
-    private ArrayList<Node> nodes;
+    @OneToMany(mappedBy = "network", cascade = CascadeType.ALL)
+    private List<Node> nodes;
+
+    public Network() {
+        this.name = "";
+        this.nodes = new ArrayList<>();
+    }
 
     public Network(String name) {
         this.name = name;
@@ -26,11 +31,11 @@ public class Network {
         this.name = name;
     }
 
-    public ArrayList<Node> getNodes() {
+    public List<Node> getNodes() {
         return nodes;
     }
 
-    public void setNodes(ArrayList<Node> nodes) {
+    public void setNodes(List<Node> nodes) {
         this.nodes = nodes;
     }
 

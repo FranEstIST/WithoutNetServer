@@ -37,8 +37,9 @@ public class NodeServiceImpl implements NodeService {
     @Override
     public Node getNodeByNetworkNameAndCommonName(String networkName, String commonName) {
         //List<Node> nodes = nodeRepo.findAll(hasCommonName(commonName).and(isInNetworkWithNetworkName(networkName)));
-        List<Node> nodes = nodeRepo.findNodeByNetworkNameAndCommonName(networkName, commonName);
-        return (nodes == null || nodes.isEmpty()) ? null : nodes.get(0);
+        //List<Node> nodes = nodeRepo.findNodeByNetworkNameAndCommonName(networkName, commonName);
+        //return (nodes == null || nodes.isEmpty()) ? null : nodes.get(0);
+        return null;
     }
 
     @Override

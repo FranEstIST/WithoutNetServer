@@ -14,11 +14,20 @@ public class Node implements Serializable {
 
     private String commonName;
 
+    @ManyToOne()
+    @JoinColumn(name = "network_id", nullable = false)
+    private Network network;
+
     public Node() {
     }
 
     public Node(String commonName) {
         this.setCommonName(commonName);
+    }
+
+    public Node(String commonName, Network network) {
+        this.setCommonName(commonName);
+        this.setNetwork(network);
     }
 
     public String getCommonName() {
@@ -35,6 +44,14 @@ public class Node implements Serializable {
 
     public int getId() {
         return this.id;
+    }
+
+    public Network getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(Network network) {
+        this.network = network;
     }
 
     @Override
