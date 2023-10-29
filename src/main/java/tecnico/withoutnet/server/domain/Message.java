@@ -17,16 +17,20 @@ public class Message {
 
     private int messageType;
 
-    private int sender;
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
+    private Node sender;
 
-    private int receiver;
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private Node receiver;
 
     private String payload;
 
     public Message() {
     }
 
-    public Message(short length, long timestamp, int messageType, int sender, int receiver, String payload) {
+    public Message(short length, long timestamp, int messageType, Node sender, Node receiver, String payload) {
         this.length = length;
         this.timestamp = timestamp;
         this.messageType = messageType;
@@ -70,11 +74,11 @@ public class Message {
         return timestamp;
     }
 
-    public int getSender() {
+    public Node getSender() {
         return sender;
     }
 
-    public int getReceiver() {
+    public Node getReceiver() {
         return receiver;
     }
 
@@ -102,11 +106,11 @@ public class Message {
         this.timestamp = timestamp;
     }
 
-    public void setSender(int sender) {
+    public void setSender(Node sender) {
         this.sender = sender;
     }
 
-    public void setReceiver(int receiver) {
+    public void setReceiver(Node receiver) {
         this.receiver = receiver;
     }
 

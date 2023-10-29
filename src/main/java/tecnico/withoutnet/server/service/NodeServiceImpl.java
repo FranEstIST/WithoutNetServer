@@ -2,6 +2,7 @@ package tecnico.withoutnet.server.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import tecnico.withoutnet.server.domain.Network;
 import tecnico.withoutnet.server.domain.Node;
@@ -31,7 +32,17 @@ public class NodeServiceImpl implements NodeService {
 
     @Override
     public Node getNodeById(int id) {
-        return nodeRepo.findById(id);
+        Node node;
+
+        try {
+            node = nodeRepo.findById(id);
+        } catch (JpaObjectRetrievalFailureException e) {
+            // Add this non-existent to the server's node repo, with its common name and network as N/A
+            node = new Node("N/A");
+            addNode(node);
+        }
+
+        return node;
     }
 
     @Override

@@ -21,6 +21,9 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private NodeService nodeService;
+
     @PostMapping("add-message-batch")
     public String addMessageBatch(@RequestBody AddMessageBatchRequest addMessageBatchRequest) {
         List<AddMessageRequest> messageBatch = addMessageBatchRequest.getMessageBatch();
@@ -29,9 +32,12 @@ public class MessageController {
             int length = addMessageRequest.getLength();
             long timestamp = addMessageRequest.getTimestamp();
             int messageType = addMessageRequest.getMessageType();
-            int sender = addMessageRequest.getSender();
-            int receiver = addMessageRequest.getReceiver();
+            int senderId = addMessageRequest.getSender();
+            int receiverId = addMessageRequest.getReceiver();
             String payload = addMessageRequest.getPayload();
+
+            Node sender = nodeService.getNodeById(senderId);
+            Node receiver = nodeService.getNodeById(receiverId);
 
             Message receivedMessage = new Message((short) length, timestamp, messageType, sender, receiver, payload);
 
@@ -47,9 +53,12 @@ public class MessageController {
         int length = addMessageRequest.getLength();
         long timestamp = addMessageRequest.getTimestamp();
         int messageType = addMessageRequest.getMessageType();
-        int sender = addMessageRequest.getSender();
-        int receiver = addMessageRequest.getReceiver();
+        int senderId = addMessageRequest.getSender();
+        int receiverId = addMessageRequest.getReceiver();
         String payload = addMessageRequest.getPayload();
+
+        Node sender = nodeService.getNodeById(senderId);
+        Node receiver = nodeService.getNodeById(receiverId);
 
         Message receivedMessage = new Message((short) length, timestamp, messageType, sender, receiver, payload);
 
@@ -118,8 +127,8 @@ public class MessageController {
         messageJson.addProperty("length", message.getLength());
         messageJson.addProperty("timestamp", message.getTimestamp());
         messageJson.addProperty("messageType", message.getMessageType());
-        messageJson.addProperty("sender", message.getSender());
-        messageJson.addProperty("receiver", message.getReceiver());
+        messageJson.addProperty("sender", message.getSender().getId());
+        messageJson.addProperty("receiver", message.getReceiver().getId());
         messageJson.addProperty("payload", message.getPayload());
         return messageJson;
     }

@@ -11,5 +11,5 @@ import java.util.List;
 public interface MessageRepo extends JpaRepository<Message, Long> {
     List<Message> findByReceiver(int receiver);
     //List<Message> findByLocalIdAndMessageTypeAndTimestampAndSenderAndReceiverAndContent(long localId, int messageType, long timestamp, String sender, String Receiver, String content);
-    boolean existsByTimestampAndMessageTypeAndSenderAndReceiverAndPayload(long timestamp, int messageType, int sender, int Receiver, String payload);
+    boolean existsByTimestampAndMessageTypeAndSenderAndReceiverAndPayload(long timestamp, int messageType, Node sender, Node receiver, String payload);
 }

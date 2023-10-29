@@ -14,6 +14,7 @@ public class Node implements Serializable {
 
     private String commonName;
 
+    // TODO: Make this field nullable, so that nodes don't necessarily have to be in a network
     @ManyToOne()
     @JoinColumn(name = "network_id", nullable = false)
     private Network network;
