@@ -5,7 +5,7 @@ import java.util.Base64;
 
 @Entity
 @Table(name = "messages",
-       uniqueConstraints = {@UniqueConstraint(columnNames = {"timestamp", "messageType", "sender", "receiver", "payload"})})
+       uniqueConstraints = {@UniqueConstraint(columnNames = {"timestamp", "message_type", "sender_id", "receiver_id", "payload"})})
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +15,7 @@ public class Message {
 
     private long timestamp;
 
+    @Column(name = "message_type")
     private int messageType;
 
     @ManyToOne

@@ -14,9 +14,10 @@ public class Node implements Serializable {
 
     private String commonName;
 
-    // TODO: Make this field nullable, so that nodes don't necessarily have to be in a network
+    // TODO: Check if there are any issues with this field not being nullable, i.e., with allowing
+    // nodes to not be inside any network
     @ManyToOne()
-    @JoinColumn(name = "network_id", nullable = false)
+    @JoinColumn(name = "network_id")
     private Network network;
 
     public Node() {
