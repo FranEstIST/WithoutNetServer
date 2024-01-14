@@ -6,6 +6,7 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import tecnico.withoutnet.server.domain.Network;
 import tecnico.withoutnet.server.domain.Node;
+import tecnico.withoutnet.server.exceptions.DuplicateNodeNameException;
 import tecnico.withoutnet.server.repo.NodeRepo;
 
 import javax.persistence.criteria.Join;
@@ -17,6 +18,10 @@ import java.util.List;
 public class NodeServiceImpl implements NodeService {
     @Autowired
     private NodeRepo nodeRepo;
+
+    public NodeServiceImpl(NodeRepo nodeRepo) {
+        this.nodeRepo = nodeRepo;
+    }
 
     public static Specification<Node> hasCommonName(String commonName) {
         return (root, query, criteriaBuilder) ->
@@ -48,13 +53,16 @@ public class NodeServiceImpl implements NodeService {
     @Override
     public Node getNodeByNetworkNameAndCommonName(String networkName, String commonName) {
         //List<Node> nodes = nodeRepo.findAll(hasCommonName(commonName).and(isInNetworkWithNetworkName(networkName)));
-        //List<Node> nodes = nodeRepo.findNodeByNetworkNameAndCommonName(networkName, commonName);
-        //return (nodes == null || nodes.isEmpty()) ? null : nodes.get(0);
-        return null;
+        List<Node> nodes = nodeRepo.findNodeByNetworkNameAndCommonName(networkName, commonName);
+        return (nodes == null || nodes.isEmpty()) ? null : nodes.get(0);
+        //return null;
     }
 
     @Override
-    public void addNode(Node node) {
+    public void addNode(Node node) throws DuplicateNodeNameException {
+        if(nodeRepo.existsById(node.getId())) {
+            throw new DuplicateNodeNameException("Node with name " + node.getCommonName() + " already exists");
+        }
         nodeRepo.save(node);
     }
 

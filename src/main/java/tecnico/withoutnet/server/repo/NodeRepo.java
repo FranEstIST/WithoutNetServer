@@ -12,6 +12,6 @@ import java.util.List;
 public interface NodeRepo extends JpaRepository<Node, Integer> {
     Node findById(int id);
 
-    @Query("SELECT nds FROM Network nws JOIN Node nds WHERE nws.name = :networkName AND nds.commonName = :commonName")
+    @Query("SELECT nd FROM Network nw INNER JOIN Node nd ON nw.name = :networkName AND nd.commonName = :commonName")
     List<Node> findNodeByNetworkNameAndCommonName(@Param("networkName") String networkName, @Param("commonName") String commonName);
 }

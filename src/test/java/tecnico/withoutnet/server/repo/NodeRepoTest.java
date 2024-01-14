@@ -8,6 +8,8 @@ import org.springframework.test.context.ActiveProfiles;
 import tecnico.withoutnet.server.domain.Network;
 import tecnico.withoutnet.server.domain.Node;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -38,6 +40,32 @@ public class NodeRepoTest {
         expectedSavedNode.setCommonName("nodeOnePrime");
         Node savedNode = nodeRepo.findById(expectedSavedNode.getId());
         assertThat(expectedSavedNode).usingRecursiveComparison().isEqualTo(savedNode);
+    }
+
+    @Test
+    public void shouldFindNodeById() {
+        Network networkOne = new Network("networkOne");
+        networkRepo.save(networkOne);
+
+        Node nodeOne = new Node("nodeOne", networkOne);
+        Node expectedSavedNode = nodeRepo.save(nodeOne);
+
+        Node savedNode = nodeRepo.findById(expectedSavedNode.getId());
+
+        assertThat(expectedSavedNode).usingRecursiveComparison().isEqualTo(savedNode);
+    }
+
+    @Test
+    public void shouldFindNodeByNetworkAndCommonName() {
+        Network networkOne = new Network("networkOne");
+        networkRepo.save(networkOne);
+
+        Node nodeOne = new Node("nodeOne", networkOne);
+        Node expectedSavedNode = nodeRepo.save(nodeOne);
+
+        List<Node> savedNodeList = nodeRepo.findNodeByNetworkNameAndCommonName("networkOne", "nodeOne");
+
+        assertThat(expectedSavedNode).usingRecursiveComparison().isEqualTo(savedNodeList.get(0));
     }
 
     @Test
