@@ -33,9 +33,13 @@ public class NodeController {
     public String addNode(@RequestBody AddNodeRequest addNodeRequest) {
         Node newNode = new Node(addNodeRequest.getCommonName());
 
-        nodeService.addNode(newNode);
+        Node savedNode = nodeService.addNode(newNode);
 
         JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
+
+        JsonObject savedNodeJson = ControllerUtils.getNodeJson(savedNode);
+
+        response.add("node", savedNodeJson);
 
         return response.toString();
     }

@@ -7,7 +7,7 @@ import tecnico.withoutnet.server.domain.Node;
 public interface NodeService {
     public Node getNodeById(int id);
     public Node getNodeByNetworkNameAndCommonName(String networkName, String commonName);
-    public void addNode(Node node);
+    public Node addNode(Node node);
     public void renameNode(int nodeId, String newCommonName);
     public void deleteNode(int nodeId);
 }
