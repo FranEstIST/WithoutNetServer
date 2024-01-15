@@ -59,6 +59,11 @@ public class NodeServiceImpl implements NodeService {
     }
 
     @Override
+    public List<Node> getNodesWithoutANetwork() {
+        return nodeRepo.findNodesWithoutANetwork();
+    }
+
+    @Override
     public Node addNode(Node node) throws DuplicateNodeNameException {
         if(nodeRepo.existsById(node.getId())) {
             throw new DuplicateNodeNameException("Node with name " + node.getCommonName() + " already exists");

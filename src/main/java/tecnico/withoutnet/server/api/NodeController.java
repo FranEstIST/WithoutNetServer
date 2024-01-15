@@ -1,5 +1,6 @@
 package tecnico.withoutnet.server.api;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,8 @@ import tecnico.withoutnet.server.StatusCodes;
 import tecnico.withoutnet.server.domain.Node;
 import tecnico.withoutnet.server.service.NodeService;
 import tecnico.withoutnet.server.utils.ControllerUtils;
+
+import java.util.List;
 
 @Controller
 public class NodeController {
@@ -25,6 +28,23 @@ public class NodeController {
 
         JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
         response.add("node", nodeJson);
+
+        return response.toString();
+    }
+
+    @GetMapping("get-nodes-without-a-network")
+    public String getNodesWithoutANetwork() {
+        List<Node> nodesWithoutANetwork = nodeService.getNodesWithoutANetwork();
+
+        JsonArray nodesJson = new JsonArray();
+
+        for(Node node : nodesWithoutANetwork) {
+            JsonObject nodeJson = ControllerUtils.getNodeJson(node);
+            nodesJson.add(nodeJson);
+        }
+
+        JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
+        response.add("nodes", nodesJson);
 
         return response.toString();
     }
