@@ -8,6 +8,10 @@ import java.util.List;
 @Table(name = "networks")
 public class Network {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(unique = true)
     private String name;
 
     @OneToMany(mappedBy = "network", cascade = CascadeType.ALL)
@@ -21,6 +25,10 @@ public class Network {
     public Network(String name) {
         this.name = name;
         this.nodes = new ArrayList<>();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {

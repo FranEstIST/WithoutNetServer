@@ -8,6 +8,7 @@ import tecnico.withoutnet.server.repo.NetworkRepo;
 import tecnico.withoutnet.server.repo.NodeRepo;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -15,9 +16,23 @@ public class NetworkServiceImpl implements NetworkService {
     @Autowired
     private NetworkRepo networkRepo;
 
+    @Autowired
+    private NodeRepo nodeRepo;
+
+    @Override
+    public Network getNetworkById(int networkId) {
+        return networkRepo.getById(networkId);
+    }
+
     @Override
     public Network getNetworkByName(String networkName) {
         return networkRepo.findByName(networkName);
+    }
+
+    @Override
+    public List<Node> getAllNodesInNetwork(int networkId) {
+        Network network = networkRepo.getById(networkId);
+        return network.getNodes();
     }
 
     @Override
@@ -26,17 +41,41 @@ public class NetworkServiceImpl implements NetworkService {
     }
 
     @Override
-    public void renameNetwork(Network network) {
-
+    public void renameNetwork(int networkId, String newName) {
+        Network networkToBeRenamed = networkRepo.getById(networkId);
+        networkToBeRenamed.setName(newName);
     }
 
     @Override
-    public void addNodeToNetwork(Node node, Network network) {
+    public void addNodeToNetwork(int nodeId, int networkId) {
+        Node node = nodeRepo.getById(nodeId);
 
+        // TODO: Check if the node is actually removed
+        // from the network in the db
+        Network previousNetwork = node.getNetwork();
+        previousNetwork.removeNode(node);
+
+        Network network = networkRepo.getById(networkId);
+        node.setNetwork(network);
+        network.addNode(node);
     }
 
     @Override
-    public void deleteNetwork(Network network) {
+    public void removeNodeFromNetwork(int nodeId, int networkId) {
+        Node node = nodeRepo.getById(nodeId);
+
+        // TODO: Check if the node is actually removed
+        // from the network in the db
+        Network network = networkRepo.getById(networkId);
+        // TODO: Check if node is actually in the network
+
+        network.removeNode(node);
+        node.setNetwork(null);
+    }
+
+    @Override
+    public void deleteNetwork(int networkId) {
+        Network network = networkRepo.getById(networkId);
         networkRepo.delete(network);
     }
 }

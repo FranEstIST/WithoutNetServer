@@ -8,10 +8,6 @@ public interface NodeService {
     public Node getNodeById(int id);
     public Node getNodeByNetworkNameAndCommonName(String networkName, String commonName);
     public void addNode(Node node);
-
-    // TODO: This method may be unnecessary (it might be better to simply call the Node Class's
-    // setCommonName method directly)
-    public void renameNode(Node node, String newCommonName);
-
-    public void deleteNode(Node node);
+    public void renameNode(int nodeId, String newCommonName);
+    public void deleteNode(int nodeId);
 }

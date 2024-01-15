@@ -67,12 +67,14 @@ public class NodeServiceImpl implements NodeService {
     }
 
     @Override
-    public void renameNode(Node node, String newCommonName) {
+    public void renameNode(int nodeId, String newCommonName) {
+        Node node = getNodeById(nodeId);
         node.setCommonName(newCommonName);
     }
 
     @Override
-    public void deleteNode(Node node) {
+    public void deleteNode(int nodeId) {
+        Node node = nodeRepo.getById(nodeId);
         nodeRepo.delete(node);
     }
 }

@@ -92,6 +92,34 @@ public class MessageController {
         return response.toString();
     }
 
+    @PostMapping("get-most-recent-messages-by-sender-and-receiver")
+    public String getMostRecentMessageBySenderAndReceiver(@RequestBody GetMostRecentMessagesBySenderAndReceiver getMostRecentMessagesBySenderAndReceiver) {
+        /*if(receiver not valid) {
+            JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
+            return response.toString();
+        }*/
+
+        List<Message> messages = messageService.getMessagesBySenderAndReceiver(getMostRecentMessagesBySenderAndReceiver.getSenderId(),
+                getMostRecentMessagesBySenderAndReceiver.getReceiverId());
+
+        if(messages == null || messages.isEmpty()) {
+            JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
+            return response.toString();
+        }
+
+        JsonObject response = createStatusJson(StatusCodes.OK);
+        JsonArray messagesJsonArray = new JsonArray();
+
+        // TODO: Limit the number of messages to be returned
+
+        for(Message message : messages) {
+            messagesJsonArray.add(getMessageJson(message));
+        }
+        response.add("messages", messagesJsonArray);
+
+        return response.toString();
+    }
+
     @PostMapping("get-all-messages")
     public String getAllMessages() {
         /*if(receiver not valid) {
@@ -139,6 +167,30 @@ public class MessageController {
         nodeJson.addProperty("common-name", node.getCommonName());
         //nodeJson.addProperty("reading-type", node.getReadingType());
         return nodeJson;
+    }
+}
+
+class GetMostRecentMessagesBySenderAndReceiver {
+    private final int senderId;
+    private final int receiverId;
+    private final int maxNumOfMessages;
+
+    public GetMostRecentMessagesBySenderAndReceiver(int senderId, int receiverId, int maxNumOfMessages) {
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.maxNumOfMessages = maxNumOfMessages;
+    }
+
+    public int getSenderId() {
+        return senderId;
+    }
+
+    public int getReceiverId() {
+        return receiverId;
+    }
+
+    public int getMaxNumOfMessages() {
+        return maxNumOfMessages;
     }
 }
 

@@ -7,6 +7,7 @@ import java.util.List;
 public interface MessageService {
     void addMessage(Message message);
     List<Message> getMessageByReceiver(int receiver);
+    List<Message> getMessagesBySenderAndReceiver(int senderId, int receiverId);
     List<Message> getAllMessages();
     void deleteAllMessages();
 }
