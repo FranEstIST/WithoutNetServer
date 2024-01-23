@@ -85,16 +85,10 @@ public class NetworkController {
 }
 
 class AddNetworkRequest {
-    private final int networkId;
     private final String name;
 
-    public AddNetworkRequest(int networkId, String name) {
-        this.networkId = networkId;
+    public AddNetworkRequest(String name) {
         this.name = name;
-    }
-
-    public int getNetworkId() {
-        return networkId;
     }
 
     public String getName() {
