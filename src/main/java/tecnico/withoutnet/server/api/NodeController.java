@@ -4,21 +4,23 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import tecnico.withoutnet.server.StatusCodes;
+import tecnico.withoutnet.server.domain.Network;
 import tecnico.withoutnet.server.domain.Node;
+import tecnico.withoutnet.server.service.NetworkService;
 import tecnico.withoutnet.server.service.NodeService;
 import tecnico.withoutnet.server.utils.ControllerUtils;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class NodeController {
     @Autowired
     NodeService nodeService;
+
+    @Autowired
+    NetworkService networkService;
 
     @GetMapping("get-node-by-id/{nodeId}")
     public String getNodeById(@PathVariable int nodeId) {
@@ -51,14 +53,19 @@ public class NodeController {
 
     @PostMapping("add-node")
     public String addNode(@RequestBody AddNodeRequest addNodeRequest) {
-        Node newNode = new Node(addNodeRequest.getCommonName());
+        Node newNode;
+
+        if(addNodeRequest.getNetworkId() == -1) {
+            newNode = new Node(addNodeRequest.getCommonName());
+        } else {
+            Network network = networkService.getNetworkById(addNodeRequest.getNetworkId());
+            newNode = new Node(addNodeRequest.getCommonName(), network);
+        }
 
         Node savedNode = nodeService.addNode(newNode);
 
         JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
-
         JsonObject savedNodeJson = ControllerUtils.getNodeJson(savedNode);
-
         response.add("node", savedNodeJson);
 
         return response.toString();
@@ -87,12 +94,19 @@ public class NodeController {
 class AddNodeRequest {
     private final String commonName;
 
-    public AddNodeRequest(String commonName) {
+    private final int networkId;
+
+    public AddNodeRequest(String commonName, int networkId) {
         this.commonName = commonName;
+        this.networkId = networkId;
     }
 
     public String getCommonName() {
         return commonName;
+    }
+
+    public int getNetworkId() {
+        return networkId;
     }
 }
 

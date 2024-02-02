@@ -36,8 +36,8 @@ public class NetworkServiceImpl implements NetworkService {
     }
 
     @Override
-    public void addNetwork(Network network) {
-        networkRepo.save(network);
+    public Network addNetwork(Network network) {
+        return networkRepo.save(network);
     }
 
     @Override

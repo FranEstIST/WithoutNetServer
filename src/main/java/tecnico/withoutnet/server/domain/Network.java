@@ -9,6 +9,7 @@ import java.util.List;
 public class Network {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "network_id")
     private int id;
 
     @Column(unique = true)

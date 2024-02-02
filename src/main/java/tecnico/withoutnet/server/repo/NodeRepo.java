@@ -15,6 +15,6 @@ public interface NodeRepo extends JpaRepository<Node, Integer> {
     @Query("SELECT nd FROM Network nw INNER JOIN Node nd ON nw.name = :networkName AND nd.commonName = :commonName")
     List<Node> findNodeByNetworkNameAndCommonName(@Param("networkName") String networkName, @Param("commonName") String commonName);
 
-    @Query("SELECT nd FROM Node nd WHERE nd.network_id IS NULL")
+    @Query("SELECT nd FROM Node nd WHERE nd.network IS NULL")
     List<Node> findNodesWithoutANetwork();
 }

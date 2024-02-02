@@ -13,6 +13,7 @@ import tecnico.withoutnet.server.utils.ControllerUtils;
 import java.util.List;
 
 import static tecnico.withoutnet.server.utils.ControllerUtils.createStatusJson;
+import static tecnico.withoutnet.server.utils.ControllerUtils.getNetworkJson;
 
 @RestController
 public class NetworkController {
@@ -47,8 +48,12 @@ public class NetworkController {
     @PostMapping("add-network")
     public String addNetwork(@RequestBody AddNetworkRequest addNetworkRequest) {
         Network newNetwork = new Network(addNetworkRequest.getName());
-        networkService.addNetwork(newNetwork);
+        Network savedNetwork = networkService.addNetwork(newNetwork);
+
         JsonObject response = createStatusJson(StatusCodes.OK);
+        JsonObject savedNetworkJson = getNetworkJson(savedNetwork);
+        response.add("network", savedNetworkJson);
+
         return response.toString();
     }
 
@@ -85,7 +90,10 @@ public class NetworkController {
 }
 
 class AddNetworkRequest {
-    private final String name;
+    private String name;
+
+    public AddNetworkRequest() {
+    }
 
     public AddNetworkRequest(String name) {
         this.name = name;
@@ -93,6 +101,10 @@ class AddNetworkRequest {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
 

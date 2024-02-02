@@ -11,7 +11,7 @@ public interface NetworkService {
     Network getNetworkById(int networkId);
     Network getNetworkByName(String networkName);
     List<Node> getAllNodesInNetwork(int networkId);
-    void addNetwork(Network network);
+    Network addNetwork(Network network);
     void renameNetwork(int networkId, String newName);
     void addNodeToNetwork(int nodeId, int networkId);
     void removeNodeFromNetwork(int nodeId, int networkId);
