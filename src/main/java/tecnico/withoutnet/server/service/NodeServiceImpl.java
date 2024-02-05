@@ -66,12 +66,33 @@ public class NodeServiceImpl implements NodeService {
 
         try {
             Integer.parseInt(searchTerm);
-            List<Node> nodesWithMatchingId = nodeRepo.findNodeByNetworkIdOrWithoutANetworkAndIdPattern(networkId, searchPattern);
+            List<Node> nodesWithMatchingId = nodeRepo.findNodeByNetworkIdAndIdPattern(networkId, searchPattern);
             nodes.addAll(nodesWithMatchingId);
         } catch (NumberFormatException e) {}
 
-        List<Node> nodesWithMatchingName = nodeRepo.findNodeByNetworkIdOrWithoutANetworkAndCommonNamePattern(networkId, searchPattern);
+        List<Node> nodesWithMatchingName = nodeRepo.findNodeByNetworkIdAndCommonNamePattern(networkId, searchPattern);
         nodes.addAll(nodesWithMatchingName);
+
+        return nodes;
+    }
+
+    @Override
+    public List<Node> findNodesByNetworkIdOrWithoutANetworkAndSearchTerm(int networkId, String searchTerm) {
+        List<Node> nodes = new ArrayList<>();
+        String searchPattern = "%"+ searchTerm + "%";
+
+        try {
+            Integer.parseInt(searchTerm);
+            List<Node> nodesWithMatchingId = nodeRepo.findNodeByNetworkIdAndIdPattern(networkId, searchPattern);
+            nodes.addAll(nodesWithMatchingId);
+            List<Node> nodesWithoutANetworkWithMatchingId = nodeRepo.findNodeWithoutANetworkByIdPattern(searchPattern);
+            nodes.addAll(nodesWithoutANetworkWithMatchingId);
+        } catch (NumberFormatException e) {}
+
+        List<Node> nodesWithMatchingName = nodeRepo.findNodeByNetworkIdAndCommonNamePattern(networkId, searchPattern);
+        nodes.addAll(nodesWithMatchingName);
+        List<Node> nodesWithoutANetworkWithMatchingName = nodeRepo.findNodeWithoutANetworkByCommonNamePattern(searchPattern);
+        nodes.addAll(nodesWithoutANetworkWithMatchingName);
 
         return nodes;
     }
