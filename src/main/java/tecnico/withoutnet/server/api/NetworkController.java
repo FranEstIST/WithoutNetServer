@@ -1,5 +1,6 @@
 package tecnico.withoutnet.server.api;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,23 @@ public class NetworkController {
 
         JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
         response.add("network", networkJson);
+
+        return response.toString();
+    }
+
+    @GetMapping("find-networks-by-term/{searchTerm}")
+    public String findNetworksByTerm(@PathVariable String searchTerm) {
+        List<Network> networks = networkService.findNetworksBySearchTerm(searchTerm);
+
+        JsonArray networksJsonArray = new JsonArray();
+
+        for(Network network : networks) {
+            JsonObject networkJson = ControllerUtils.getNetworkJson(network);
+            networksJsonArray.add(networkJson);
+        }
+
+        JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
+        response.add("networks", networksJsonArray);
 
         return response.toString();
     }

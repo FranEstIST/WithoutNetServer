@@ -51,6 +51,23 @@ public class NodeController {
         return response.toString();
     }
 
+    @GetMapping("find-nodes-by-network-id-and-search-term/{networkId}/{searchTerm}")
+    public String findNodesBySearchTerm(@PathVariable int networkId, @PathVariable String searchTerm) {
+        List<Node> nodes = nodeService.findNodesByNetworkIdAndSearchTerm(networkId, searchTerm);
+
+        JsonArray nodesJson = new JsonArray();
+
+        for(Node node : nodes) {
+            JsonObject nodeJson = ControllerUtils.getNodeJson(node);
+            nodesJson.add(nodeJson);
+        }
+
+        JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
+        response.add("nodes", nodesJson);
+
+        return response.toString();
+    }
+
     @PostMapping("add-node")
     public String addNode(@RequestBody AddNodeRequest addNodeRequest) {
         Node newNode;

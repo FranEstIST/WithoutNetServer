@@ -11,6 +11,7 @@ import tecnico.withoutnet.server.repo.NodeRepo;
 
 import javax.persistence.criteria.Join;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,6 +57,23 @@ public class NodeServiceImpl implements NodeService {
         List<Node> nodes = nodeRepo.findNodeByNetworkNameAndCommonName(networkName, commonName);
         return (nodes == null || nodes.isEmpty()) ? null : nodes.get(0);
         //return null;
+    }
+
+    @Override
+    public List<Node> findNodesByNetworkIdAndSearchTerm(int networkId, String searchTerm) {
+        List<Node> nodes = new ArrayList<>();
+        String searchPattern = "%"+ searchTerm + "%";
+
+        try {
+            Integer.parseInt(searchTerm);
+            List<Node> nodesWithMatchingId = nodeRepo.findNodeByNetworkIdOrWithoutANetworkAndIdPattern(networkId, searchPattern);
+            nodes.addAll(nodesWithMatchingId);
+        } catch (NumberFormatException e) {}
+
+        List<Node> nodesWithMatchingName = nodeRepo.findNodeByNetworkIdOrWithoutANetworkAndCommonNamePattern(networkId, searchPattern);
+        nodes.addAll(nodesWithMatchingName);
+
+        return nodes;
     }
 
     @Override

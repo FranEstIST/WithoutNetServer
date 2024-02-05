@@ -8,6 +8,7 @@ import tecnico.withoutnet.server.repo.NetworkRepo;
 import tecnico.withoutnet.server.repo.NodeRepo;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +28,22 @@ public class NetworkServiceImpl implements NetworkService {
     @Override
     public Network getNetworkByName(String networkName) {
         return networkRepo.findByName(networkName);
+    }
+
+    @Override
+    public List<Network> findNetworksBySearchTerm(String searchTerm) {
+        List<Network> networks = new ArrayList<>();
+
+        try {
+            Integer.parseInt(searchTerm);
+            List<Network> networksWithMatchingId = networkRepo.findByIdPattern("%" + searchTerm + "%");
+            networks.addAll(networksWithMatchingId);
+        } catch (NumberFormatException e) {}
+
+        List<Network> networksWithMatchingName = networkRepo.findByIdPattern("%" + searchTerm + "%");
+        networks.addAll(networksWithMatchingName);
+
+        return networks;
     }
 
     @Override

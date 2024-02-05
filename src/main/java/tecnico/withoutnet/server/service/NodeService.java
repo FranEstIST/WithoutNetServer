@@ -9,6 +9,7 @@ import java.util.List;
 public interface NodeService {
     public Node getNodeById(int id);
     public Node getNodeByNetworkNameAndCommonName(String networkName, String commonName);
+    public List<Node> findNodesByNetworkIdAndSearchTerm(int networkId, String searchTerm);
     public List<Node> getNodesWithoutANetwork();
     public Node addNode(Node node);
     public void renameNode(int nodeId, String newCommonName);

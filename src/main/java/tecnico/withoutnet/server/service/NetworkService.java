@@ -10,6 +10,7 @@ import java.util.List;
 public interface NetworkService {
     Network getNetworkById(int networkId);
     Network getNetworkByName(String networkName);
+    List<Network> findNetworksBySearchTerm(String searchTerm);
     List<Node> getAllNodesInNetwork(int networkId);
     Network addNetwork(Network network);
     void renameNetwork(int networkId, String newName);
