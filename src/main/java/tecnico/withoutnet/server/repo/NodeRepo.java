@@ -27,10 +27,15 @@ public interface NodeRepo extends JpaRepository<Node, Integer> {
     @Query("SELECT nd FROM Node nd WHERE nd.network IS NULL AND nd.commonName LIKE :commonNamePattern")
     List<Node> findNodeWithoutANetworkByCommonNamePattern(@Param("commonNamePattern") String commonNamePattern);
 
-
-    @Query("SELECT nd FROM Network nw INNER JOIN Node nd ON nw.id = :networkId AND nd.id LIKE :idPattern")
+    @Query("SELECT nd FROM Network nw INNER JOIN Node nd ON nw.id = :networkId AND cast(nd.id as text) LIKE :idPattern")
     List<Node> findNodeByNetworkIdAndIdPattern(@Param("networkId") int networkId, @Param("idPattern") String idPattern);
 
-    @Query("SELECT nd FROM Node nd WHERE nd.network IS NULL AND nd.id LIKE :idPattern")
+    @Query("SELECT nd FROM Node nd WHERE nd.network IS NULL AND cast(nd.id as text) LIKE :idPattern")
     List<Node> findNodeWithoutANetworkByIdPattern(@Param("idPattern") String idPattern);
+
+    @Query("SELECT nd FROM Network nw INNER JOIN Node nd ON nw.id = :networkId AND nd.id = :nodeId")
+    List<Node> findNodeByNetworkIdAndId(@Param("networkId") int networkId, @Param("nodeId") int nodeId);
+
+    @Query("SELECT nd FROM Node nd WHERE nd.network IS NULL AND nd.id = :nodeId")
+    List<Node> findNodeWithoutANetworkById(@Param("nodeId") int nodeId);
 }
