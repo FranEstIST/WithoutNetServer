@@ -40,7 +40,7 @@ public class NetworkServiceImpl implements NetworkService {
             networks.addAll(networksWithMatchingId);
         } catch (NumberFormatException e) {}
 
-        List<Network> networksWithMatchingName = networkRepo.findByIdPattern("%" + searchTerm + "%");
+        List<Network> networksWithMatchingName = networkRepo.findByNamePattern("%" + searchTerm + "%");
         networks.addAll(networksWithMatchingName);
 
         return networks;

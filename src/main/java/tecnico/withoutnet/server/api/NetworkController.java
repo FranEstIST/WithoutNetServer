@@ -46,7 +46,7 @@ public class NetworkController {
         return response.toString();
     }
 
-    @GetMapping("find-networks-by-term/{searchTerm}")
+    @GetMapping("find-networks-by-search-term/{searchTerm}")
     public String findNetworksByTerm(@PathVariable String searchTerm) {
         List<Network> networks = networkService.findNetworksBySearchTerm(searchTerm);
 
