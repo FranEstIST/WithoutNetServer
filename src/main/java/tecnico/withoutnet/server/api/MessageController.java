@@ -4,10 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tecnico.withoutnet.server.StatusCodes;
 import tecnico.withoutnet.server.domain.Node;
 import tecnico.withoutnet.server.domain.Message;
@@ -68,7 +65,7 @@ public class MessageController {
         return response.toString();
     }
 
-    @PostMapping("get-messages-by-receiver/{receiver}")
+    @GetMapping("get-messages-by-receiver/{receiver}")
     public String getMostRecentMessageByReceiver(@PathVariable int receiver) {
         /*if(receiver not valid) {
             JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
@@ -92,7 +89,7 @@ public class MessageController {
         return response.toString();
     }
 
-    @PostMapping("get-most-recent-messages-by-sender-and-receiver")
+    @GetMapping("get-most-recent-messages-by-sender-and-receiver")
     public String getMostRecentMessageBySenderAndReceiver(@RequestBody GetMostRecentMessagesBySenderAndReceiver getMostRecentMessagesBySenderAndReceiver) {
         /*if(receiver not valid) {
             JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
@@ -120,7 +117,7 @@ public class MessageController {
         return response.toString();
     }
 
-    @PostMapping("get-all-messages")
+    @GetMapping("get-all-messages")
     public String getAllMessages() {
         /*if(receiver not valid) {
             JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
