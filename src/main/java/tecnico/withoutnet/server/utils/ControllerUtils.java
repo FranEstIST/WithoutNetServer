@@ -20,7 +20,13 @@ public class ControllerUtils {
         nodeJson.addProperty("id", node.getId());
         nodeJson.addProperty("common-name", node.getCommonName());
         // TODO: How are nodes without a network handled?
-        nodeJson.addProperty("network-id", node.getNetwork().getId());
+        if(node.getNetwork() != null) {
+            nodeJson.addProperty("network-id", node.getNetwork().getId());
+            nodeJson.addProperty("network-name", node.getNetwork().getName());
+        } else {
+            nodeJson.addProperty("network-id", -1);
+            nodeJson.addProperty("network-name", "");
+        }
 
         return nodeJson;
     }

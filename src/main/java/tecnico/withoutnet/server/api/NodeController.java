@@ -22,6 +22,23 @@ public class NodeController {
     @Autowired
     NetworkService networkService;
 
+    @GetMapping("get-all-nodes")
+    public String getAllNodes() {
+        List<Node> nodesWithoutANetwork = nodeService.getAllNodes();
+
+        JsonArray nodesJson = new JsonArray();
+
+        for(Node node : nodesWithoutANetwork) {
+            JsonObject nodeJson = ControllerUtils.getNodeJson(node);
+            nodesJson.add(nodeJson);
+        }
+
+        JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
+        response.add("nodes", nodesJson);
+
+        return response.toString();
+    }
+
     @GetMapping("get-node-by-id/{nodeId}")
     public String getNodeById(@PathVariable int nodeId) {
         Node node = nodeService.getNodeById(nodeId);
@@ -51,8 +68,25 @@ public class NodeController {
         return response.toString();
     }
 
+    @GetMapping("find-nodes-by-search-term/{searchTerm}")
+    public String findNodesBySearchTerm(@PathVariable String searchTerm) {
+        List<Node> nodes = nodeService.findNodesBySearchTerm(searchTerm);
+
+        JsonArray nodesJson = new JsonArray();
+
+        for(Node node : nodes) {
+            JsonObject nodeJson = ControllerUtils.getNodeJson(node);
+            nodesJson.add(nodeJson);
+        }
+
+        JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
+        response.add("nodes", nodesJson);
+
+        return response.toString();
+    }
+
     @GetMapping("find-nodes-by-network-id-and-search-term/{networkId}/{searchTerm}")
-    public String findNodesBySearchTerm(@PathVariable int networkId, @PathVariable String searchTerm) {
+    public String findNodesByNetworkIdAndSearchTerm(@PathVariable int networkId, @PathVariable String searchTerm) {
         List<Node> nodes = nodeService.findNodesByNetworkIdAndSearchTerm(networkId, searchTerm);
 
         JsonArray nodesJson = new JsonArray();
@@ -88,6 +122,26 @@ public class NodeController {
         return response.toString();
     }
 
+    @PostMapping("update-node")
+    public String updateNode(@RequestBody UpdateNodeRequest updateNodeRequest) {
+        Node node;
+
+        if(updateNodeRequest.getNetworkId() == -1) {
+            node = new Node(updateNodeRequest.getId(), updateNodeRequest.getCommonName());
+        } else {
+            Network network = networkService.getNetworkById(updateNodeRequest.getNetworkId());
+            node = new Node(updateNodeRequest.getId(), updateNodeRequest.getCommonName(), network);
+        }
+
+        Node updatedNode = nodeService.updateNode(node);
+
+        JsonObject response = ControllerUtils.createStatusJson(StatusCodes.OK);
+        JsonObject savedNodeJson = ControllerUtils.getNodeJson(updatedNode);
+        response.add("node", savedNodeJson);
+
+        return response.toString();
+    }
+
     @PostMapping("rename-node")
     public String renameNode(@RequestBody RenameNodeRequest renameNodeRequest) {
         nodeService.renameNode(renameNodeRequest.getNodeId(),
@@ -116,6 +170,32 @@ class AddNodeRequest {
     public AddNodeRequest(String commonName, int networkId) {
         this.commonName = commonName;
         this.networkId = networkId;
+    }
+
+    public String getCommonName() {
+        return commonName;
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+}
+
+class UpdateNodeRequest {
+    private final int id;
+
+    private final String commonName;
+
+    private final int networkId;
+
+    public UpdateNodeRequest(int id, String commonName, int networkId) {
+        this.id = id;
+        this.commonName = commonName;
+        this.networkId = networkId;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getCommonName() {

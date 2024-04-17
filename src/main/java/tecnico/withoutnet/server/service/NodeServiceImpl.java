@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tecnico.withoutnet.server.domain.Network;
 import tecnico.withoutnet.server.domain.Node;
 import tecnico.withoutnet.server.exceptions.DuplicateNodeNameException;
+import tecnico.withoutnet.server.exceptions.NodeNotFoundException;
 import tecnico.withoutnet.server.repo.NodeRepo;
 
 import javax.persistence.criteria.Join;
@@ -37,6 +38,11 @@ public class NodeServiceImpl implements NodeService {
     }
 
     @Override
+    public List<Node> getAllNodes() {
+        return nodeRepo.findAll();
+    }
+
+    @Override
     public Node getNodeById(int id) {
         Node node;
 
@@ -57,6 +63,23 @@ public class NodeServiceImpl implements NodeService {
         List<Node> nodes = nodeRepo.findNodeByNetworkNameAndCommonName(networkName, commonName);
         return (nodes == null || nodes.isEmpty()) ? null : nodes.get(0);
         //return null;
+    }
+
+    @Override
+    public List<Node> findNodesBySearchTerm(String searchTerm) {
+        List<Node> nodes = new ArrayList<>();
+        String searchPattern = "%"+ searchTerm.toLowerCase() + "%";
+
+        try {
+            Integer.parseInt(searchTerm);
+            List<Node> nodesWithMatchingId = nodeRepo.findNodeByIdPattern(searchPattern);
+            nodes.addAll(nodesWithMatchingId);
+        } catch (NumberFormatException e) {}
+
+        List<Node> nodesWithMatchingName = nodeRepo.findNodeByCommonNamePattern(searchPattern);
+        nodes.addAll(nodesWithMatchingName);
+
+        return nodes;
     }
 
     @Override
@@ -111,9 +134,18 @@ public class NodeServiceImpl implements NodeService {
     }
 
     @Override
+    public Node updateNode(Node node) throws NodeNotFoundException {
+        if(!nodeRepo.existsById(node.getId())) {
+            throw new NodeNotFoundException("Node with ID " + node.getId() + "does not exist");
+        }
+        return nodeRepo.save(node);
+    }
+
+    @Override
     public void renameNode(int nodeId, String newCommonName) {
         Node node = getNodeById(nodeId);
         node.setCommonName(newCommonName);
+        nodeRepo.save(node);
     }
 
     @Override

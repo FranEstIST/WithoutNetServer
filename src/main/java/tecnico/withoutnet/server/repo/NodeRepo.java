@@ -21,10 +21,16 @@ public interface NodeRepo extends JpaRepository<Node, Integer> {
     @Query("SELECT nd FROM Node nd WHERE nd.network.id = :networkId")
     List<Node> findNodeByNetworkId(@Param("networkId") int networkId);
 
-    @Query("SELECT nd FROM Node nd WHERE nd.network.id = :networkId AND nd.commonName LIKE :commonNamePattern")
+    @Query("SELECT nd FROM Node nd WHERE lower(nd.commonName) LIKE :commonNamePattern")
+    List<Node> findNodeByCommonNamePattern(@Param("commonNamePattern") String commonNamePattern);
+
+    @Query("SELECT nd FROM Node nd WHERE cast(nd.id as text) LIKE :idPattern")
+    List<Node> findNodeByIdPattern(@Param("idPattern") String idPattern);
+
+    @Query("SELECT nd FROM Node nd WHERE nd.network.id = :networkId AND lower(nd.commonName) LIKE :commonNamePattern")
     List<Node> findNodeByNetworkIdAndCommonNamePattern(@Param("networkId") int networkId, @Param("commonNamePattern") String commonNamePattern);
 
-    @Query("SELECT nd FROM Node nd WHERE nd.network IS NULL AND nd.commonName LIKE :commonNamePattern")
+    @Query("SELECT nd FROM Node nd WHERE nd.network IS NULL AND lower(nd.commonName) LIKE :commonNamePattern")
     List<Node> findNodeWithoutANetworkByCommonNamePattern(@Param("commonNamePattern") String commonNamePattern);
 
     @Query("SELECT nd FROM Node nd WHERE nd.network.id = :networkId AND cast(nd.id as text) LIKE :idPattern")

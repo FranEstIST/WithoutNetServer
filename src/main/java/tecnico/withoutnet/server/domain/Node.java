@@ -28,7 +28,18 @@ public class Node implements Serializable {
         this.setCommonName(commonName);
     }
 
+    public Node(int id, String commonName) {
+        this.id = id;
+        this.setCommonName(commonName);
+    }
+
     public Node(String commonName, Network network) {
+        this.setCommonName(commonName);
+        this.setNetwork(network);
+    }
+
+    public Node(int id, String commonName, Network network) {
+        this.id = id;
         this.setCommonName(commonName);
         this.setNetwork(network);
     }
