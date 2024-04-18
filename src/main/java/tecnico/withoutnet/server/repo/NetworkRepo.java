@@ -13,7 +13,7 @@ import java.util.List;
 public interface NetworkRepo extends JpaRepository<Network, Integer> {
     Network findByName(String name);
 
-    @Query("SELECT nw FROM Network nw WHERE nw.name LIKE :namePattern")
+    @Query("SELECT nw FROM Network nw WHERE lower(nw.name) LIKE :namePattern")
     List<Network> findByNamePattern(@Param("namePattern") String namePattern);
 
     @Query("SELECT nw FROM Network nw WHERE cast(nw.id as text) LIKE :idPattern")
