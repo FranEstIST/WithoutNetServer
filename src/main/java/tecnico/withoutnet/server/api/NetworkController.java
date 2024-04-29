@@ -83,9 +83,9 @@ public class NetworkController {
         return response.toString();
     }
 
-    @PostMapping("delete-network")
-    public String deleteNetwork(@RequestBody DeleteNetworkRequest deleteNetworkRequest) {
-        networkService.deleteNetwork(deleteNetworkRequest.getNetworkId());
+    @PostMapping("delete-network/{networkId}")
+    public String deleteNetwork(@PathVariable int networkId) {
+        networkService.deleteNetwork(networkId);
         JsonObject response = createStatusJson(StatusCodes.OK);
         return response.toString();
     }
@@ -141,18 +141,6 @@ class RenameNetworkRequest {
 
     public String getNewName() {
         return newName;
-    }
-}
-
-class DeleteNetworkRequest {
-    private final int networkId;
-
-    public DeleteNetworkRequest(int networkId) {
-        this.networkId = networkId;
-    }
-
-    public int getNetworkId() {
-        return networkId;
     }
 }
 

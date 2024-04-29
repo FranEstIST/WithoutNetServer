@@ -11,6 +11,7 @@ import tecnico.withoutnet.server.domain.Message;
 import tecnico.withoutnet.server.service.NodeService;
 import tecnico.withoutnet.server.service.MessageService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -126,9 +127,13 @@ public class MessageController {
 
         List<Message> messages = messageService.getAllMessages();
 
-        if(messages == null || messages.isEmpty()) {
+        /*if(messages == null || messages.isEmpty()) {
             JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
             return response.toString();
+        }*/
+
+        if(messages == null) {
+            messages = new ArrayList<>();
         }
 
         JsonObject response = createStatusJson(StatusCodes.OK);
