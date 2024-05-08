@@ -3,7 +3,11 @@ package tecnico.withoutnet.server.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tecnico.withoutnet.server.domain.Message;
+import tecnico.withoutnet.server.domain.Node;
+import tecnico.withoutnet.server.exceptions.MessageNotFoundException;
+import tecnico.withoutnet.server.exceptions.NodeNotFoundException;
 import tecnico.withoutnet.server.repo.MessageRepo;
+import tecnico.withoutnet.server.repo.NodeRepo;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -13,6 +17,9 @@ import java.util.List;
 public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageRepo messageRepo;
+
+    @Autowired
+    private NodeRepo nodeRepo;
 
     @Override
     public void addMessage(Message message) {
@@ -42,12 +49,58 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getMessagesBySenderAndReceiver(int senderId, int receiverId) {
-        return messageRepo.findBySenderAndReceiver(senderId, receiverId);
+        Node sender = nodeRepo.findById(senderId);
+
+        if(sender == null) {
+            throw new NodeNotFoundException("No node found with id: "+ senderId);
+        }
+
+        Node receiver = nodeRepo.findById(receiverId);
+
+        if(receiver == null) {
+            throw new NodeNotFoundException("No node found with id: "+ receiverId);
+        }
+
+        return messageRepo.findBySenderAndReceiver(sender, receiver);
+    }
+
+    @Override
+    public List<Message> getMessagesBySenderAndReceiverAfterTimestamp(int senderId, int receiverId, long timestamp) {
+        return null;
     }
 
     @Override
     public List<Message> getAllMessages() {
         return messageRepo.findAll();
+    }
+
+    @Override
+    public void removeMessage(int senderId, int receiverId, long timestamp) throws NodeNotFoundException , MessageNotFoundException{
+        Node sender = nodeRepo.findById(senderId);
+
+        if(sender == null) {
+            throw new NodeNotFoundException("No node found with id: "+ senderId);
+        }
+
+        Node receiver = nodeRepo.findById(receiverId);
+
+        if(receiver == null) {
+            throw new NodeNotFoundException("No node found with id: "+ receiverId);
+        }
+
+        Message message = messageRepo.findBySenderAndReceiverAndTimestamp(sender, receiver, timestamp);
+
+        if(message == null) {
+            throw new MessageNotFoundException("Message with senderId "
+                    + senderId
+                    + ", receiverId "
+                    + receiverId
+                    + " and timestamp "
+                    + timestamp
+                    + " was not found");
+        }
+
+        messageRepo.delete(message);
     }
 
     @Override

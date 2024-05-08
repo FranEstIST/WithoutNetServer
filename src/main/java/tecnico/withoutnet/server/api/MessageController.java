@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import tecnico.withoutnet.server.StatusCodes;
 import tecnico.withoutnet.server.domain.Node;
 import tecnico.withoutnet.server.domain.Message;
+import tecnico.withoutnet.server.exceptions.MessageNotFoundException;
+import tecnico.withoutnet.server.exceptions.NodeNotFoundException;
 import tecnico.withoutnet.server.service.NodeService;
 import tecnico.withoutnet.server.service.MessageService;
 
@@ -90,15 +92,16 @@ public class MessageController {
         return response.toString();
     }
 
-    @GetMapping("get-most-recent-messages-by-sender-and-receiver")
-    public String getMostRecentMessageBySenderAndReceiver(@RequestBody GetMostRecentMessagesBySenderAndReceiver getMostRecentMessagesBySenderAndReceiver) {
-        /*if(receiver not valid) {
-            JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
-            return response.toString();
-        }*/
+    @GetMapping("get-most-recent-messages-by-sender-and-receiver/{senderId}/{receiverId}")
+    public String getMostRecentMessagesBySenderAndReceiver(@PathVariable int senderId, @PathVariable int receiverId) {
+        List<Message> messages;
 
-        List<Message> messages = messageService.getMessagesBySenderAndReceiver(getMostRecentMessagesBySenderAndReceiver.getSenderId(),
-                getMostRecentMessagesBySenderAndReceiver.getReceiverId());
+        try {
+            messages = messageService.getMessagesBySenderAndReceiver(senderId, receiverId);
+        } catch(NodeNotFoundException e) {
+            JsonObject response = createStatusJson(StatusCodes.NODE_NOT_FOUND);
+            return response.toString();
+        }
 
         if(messages == null || messages.isEmpty()) {
             JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
@@ -109,6 +112,29 @@ public class MessageController {
         JsonArray messagesJsonArray = new JsonArray();
 
         // TODO: Limit the number of messages to be returned
+
+        for(Message message : messages) {
+            messagesJsonArray.add(getMessageJson(message));
+        }
+        response.add("messages", messagesJsonArray);
+
+        return response.toString();
+    }
+
+    @GetMapping("get-most-recent-messages-by-sender-and-receiver-after-timestamp")
+    public String getMostRecentMessageBySenderAndReceiverAfterTimestamp(@RequestBody GetMostRecentMessagesBySenderAndReceiverAfterTimestampRequest getMostRecentMessagesBySenderAndReceiverAfterTimestampRequest) {
+        List<Message> messages = messageService.getMessagesBySenderAndReceiverAfterTimestamp(
+                getMostRecentMessagesBySenderAndReceiverAfterTimestampRequest.getSenderId()
+                , getMostRecentMessagesBySenderAndReceiverAfterTimestampRequest.getReceiverId()
+                , getMostRecentMessagesBySenderAndReceiverAfterTimestampRequest.getTimestamp());
+
+        if(messages == null || messages.isEmpty()) {
+            JsonObject response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
+            return response.toString();
+        }
+
+        JsonObject response = createStatusJson(StatusCodes.OK);
+        JsonArray messagesJsonArray = new JsonArray();
 
         for(Message message : messages) {
             messagesJsonArray.add(getMessageJson(message));
@@ -146,6 +172,21 @@ public class MessageController {
         return response.toString();
     }
 
+    @PostMapping("remove-message")
+    public String removeMessage(@RequestBody RemoveMessageRequest removeMessageRequest) {
+        JsonObject response = createStatusJson(StatusCodes.OK);
+
+        try {
+            messageService.removeMessage(removeMessageRequest.getSenderId()
+                    , removeMessageRequest.getReceiverId()
+                    , removeMessageRequest.getTimestamp());
+        } catch (MessageNotFoundException e) {
+            response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
+        }
+
+        return response.toString();
+    }
+
     private JsonObject createStatusJson(int status) {
         JsonObject statusJson = JsonParser.parseString("{}").getAsJsonObject();
         statusJson.addProperty("status", status);
@@ -157,8 +198,19 @@ public class MessageController {
         messageJson.addProperty("length", message.getLength());
         messageJson.addProperty("timestamp", message.getTimestamp());
         messageJson.addProperty("messageType", message.getMessageType());
-        messageJson.addProperty("sender", message.getSender().getId());
-        messageJson.addProperty("receiver", message.getReceiver().getId());
+
+        if(message.getSender() != null) {
+            messageJson.addProperty("sender", message.getSender().getId());
+        } else {
+            messageJson.addProperty("sender", -1);
+        }
+
+        if(message.getReceiver() != null) {
+            messageJson.addProperty("receiver", message.getReceiver().getId());
+        } else {
+            messageJson.addProperty("receiver", -1);
+        }
+
         messageJson.addProperty("payload", message.getPayload());
         return messageJson;
     }
@@ -193,6 +245,30 @@ class GetMostRecentMessagesBySenderAndReceiver {
 
     public int getMaxNumOfMessages() {
         return maxNumOfMessages;
+    }
+}
+
+class GetMostRecentMessagesBySenderAndReceiverAfterTimestampRequest {
+    private final int senderId;
+    private final int receiverId;
+    private final long timestamp;
+
+    public GetMostRecentMessagesBySenderAndReceiverAfterTimestampRequest(int senderId, int receiverId, long timestamp) {
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.timestamp = timestamp;
+    }
+
+    public int getSenderId() {
+        return senderId;
+    }
+
+    public int getReceiverId() {
+        return receiverId;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 }
 
@@ -247,5 +323,29 @@ class AddMessageRequest {
 
     public String getPayload() {
         return payload;
+    }
+}
+
+class RemoveMessageRequest {
+    private final int senderId;
+    private final int receiverId;
+    private final long timestamp;
+
+    public RemoveMessageRequest(int senderId, int receiverId, long timestamp) {
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.timestamp = timestamp;
+    }
+
+    public int getSenderId() {
+        return senderId;
+    }
+
+    public int getReceiverId() {
+        return receiverId;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 }
