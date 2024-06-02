@@ -172,14 +172,14 @@ public class MessageController {
         return response.toString();
     }
 
-    @PostMapping("remove-message")
-    public String removeMessage(@RequestBody RemoveMessageRequest removeMessageRequest) {
+    @PostMapping("delete-message")
+    public String deleteMessage(@RequestBody DeleteMessageRequest deleteMessageRequest) {
         JsonObject response = createStatusJson(StatusCodes.OK);
 
         try {
-            messageService.removeMessage(removeMessageRequest.getSenderId()
-                    , removeMessageRequest.getReceiverId()
-                    , removeMessageRequest.getTimestamp());
+            messageService.removeMessage(deleteMessageRequest.getSenderId()
+                    , deleteMessageRequest.getReceiverId()
+                    , deleteMessageRequest.getTimestamp());
         } catch (MessageNotFoundException e) {
             response = createStatusJson(StatusCodes.NO_UPDATE_FOUND_FOR_NODE);
         }
@@ -326,12 +326,12 @@ class AddMessageRequest {
     }
 }
 
-class RemoveMessageRequest {
+class DeleteMessageRequest {
     private final int senderId;
     private final int receiverId;
     private final long timestamp;
 
-    public RemoveMessageRequest(int senderId, int receiverId, long timestamp) {
+    public DeleteMessageRequest(int senderId, int receiverId, long timestamp) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.timestamp = timestamp;

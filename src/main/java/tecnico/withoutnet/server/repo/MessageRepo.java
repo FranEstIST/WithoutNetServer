@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface MessageRepo extends JpaRepository<Message, Long> {
-    List<Message> findByReceiver(int receiver);
+    List<Message> findByReceiver(Node receiver);
     List<Message> findBySenderAndReceiver(Node sender, Node receiver);
     //List<Message> findByLocalIdAndMessageTypeAndTimestampAndSenderAndReceiverAndContent(long localId, int messageType, long timestamp, String sender, String Receiver, String content);
     Message findBySenderAndReceiverAndTimestamp(Node sender, Node receiver, long timestamp);

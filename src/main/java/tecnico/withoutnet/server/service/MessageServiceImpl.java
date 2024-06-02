@@ -43,7 +43,13 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getMessageByReceiver(int receiver) {
+    public List<Message> getMessageByReceiver(int receiverId) {
+        Node receiver = nodeRepo.findById(receiverId);
+
+        if(receiver == null) {
+            throw new NodeNotFoundException("No node found with id: "+ receiverId);
+        }
+
         return messageRepo.findByReceiver(receiver);
     }
 

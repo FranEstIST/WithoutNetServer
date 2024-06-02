@@ -85,7 +85,7 @@ public class NodeServiceImpl implements NodeService {
     @Override
     public List<Node> findNodesByNetworkIdAndSearchTerm(int networkId, String searchTerm) {
         List<Node> nodes = new ArrayList<>();
-        String searchPattern = "%"+ searchTerm + "%";
+        String searchPattern = "%"+ searchTerm.toLowerCase() + "%";
 
         try {
             Integer.parseInt(searchTerm);
@@ -102,7 +102,7 @@ public class NodeServiceImpl implements NodeService {
     @Override
     public List<Node> findNodesByNetworkIdOrWithoutANetworkAndSearchTerm(int networkId, String searchTerm) {
         List<Node> nodes = new ArrayList<>();
-        String searchPattern = "%"+ searchTerm + "%";
+        String searchPattern = "%"+ searchTerm.toLowerCase() + "%";
 
         try {
             Integer.parseInt(searchTerm);

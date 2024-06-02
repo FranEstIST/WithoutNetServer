@@ -33,14 +33,15 @@ public class NetworkServiceImpl implements NetworkService {
     @Override
     public List<Network> findNetworksBySearchTerm(String searchTerm) {
         List<Network> networks = new ArrayList<>();
+        String searchPattern = "%"+ searchTerm.toLowerCase() + "%";
 
         try {
             Integer.parseInt(searchTerm);
-            List<Network> networksWithMatchingId = networkRepo.findByIdPattern("%" + searchTerm + "%");
+            List<Network> networksWithMatchingId = networkRepo.findByIdPattern(searchPattern);
             networks.addAll(networksWithMatchingId);
         } catch (NumberFormatException e) {}
 
-        List<Network> networksWithMatchingName = networkRepo.findByNamePattern("%" + searchTerm + "%");
+        List<Network> networksWithMatchingName = networkRepo.findByNamePattern(searchPattern);
         networks.addAll(networksWithMatchingName);
 
         return networks;
